@@ -28,8 +28,8 @@ mongoose.connect(process.env.MONGO_URI)
     console.log('Mongo Error:', err)}
 );
 
-app.use('/api', profileRoutes);
-app.use('/api', authRoutes);
+app.use('/api',profileRoutes);
+app.use('/api',authRoutes);
 
 
 // Socket.IO connection
