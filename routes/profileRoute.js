@@ -1,14 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {upsertAboutUs,getAboutUs} = require('../controllers/aboutUsController');
-const orderControler = require('../controllers/orderControler');
-const {createItem,searchItems} = require('../controllers/searchController');
-const {
-  createNotification,
-  getAllNotifications,
-  markAsRead,
-  deleteNotification
-} = require('../controllers/notificationController');
+const {createProduct,getAllProducts,updateProduct,deleteProduct,createOrder,getOrderHistory,updateOrderStatus,deleteOrder,searchProducts} = require('../controllers/orderControler');
+const {createNotification,getAllNotifications,markAsRead,deleteNotification} = require('../controllers/notificationController');
 
 
 
@@ -19,23 +13,30 @@ router.post('/about-us', upsertAboutUs);
 router.get('/about-us', getAboutUs); 
   
 
+//
+// ✅ Product Routes
+//
+router.post('/products', createProduct);             // Create Product
+router.get('/products', getAllProducts);             // Get All Products
+router.put('/products/:productId', updateProduct);   // Update Product
+router.delete('/products/:productId', deleteProduct);// Delete Product
 
-//order route
-router.post('/orders', orderControler.createOrder);
-router.get('/orders/:userId/history', orderControler.getOrderHistory);
-
+//
+// ✅ Order Routes
+//
+router.post('/orders', createOrder);                  // Create Order
+router.get('/orders/:userId', getOrderHistory);       // Get Orders by User ID
+router.put('/orders/:orderId', updateOrderStatus);         // ✏️ Update order status
+router.delete('/orders/:orderId', deleteOrder);            // 🗑️ Delete order
 
 //search route
-router.post('/search', createItem);     // Add item
-router.get('/search', searchItems); // Search
+router.get('/search', searchProducts); // Example: /search?name=apple&category=Fruits
 
-
-//notification route
+ //notification route
 router.post('/notification', createNotification);
 router.get('/notification', getAllNotifications);
 router.put('/notification/read/:id', markAsRead);
 router.delete('/notification/:id', deleteNotification);
-
 
 
 
