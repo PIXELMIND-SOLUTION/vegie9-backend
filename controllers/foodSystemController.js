@@ -1,5 +1,6 @@
 const { Category, VegFood } = require("../models/foodSystemModel");
-const Cart=require("../models/cartModel")
+const Cart=require("../models/cartModel");
+const Restaurant = require("../models/restaurantModel");
 const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
 
@@ -210,5 +211,62 @@ exports.removeFromCart = async (req, res) => {
     res.status(200).json({ message: "Product removed from cart", cart });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+//Near by Restaurant
+
+exports.createRestaurant = async (req, res) => {
+  try {
+    const { restaurantName, rating, price, description, latitude, longitude } = req.body;
+    const file = req.file;
+
+    if (!file) return res.status(400).json({ message: "Image is required" });
+
+    const uploaded = await cloudinary.uploader.upload(file.path, {
+      folder: "restaurants"
+    });
+
+    fs.unlinkSync(file.path); // Delete local temp image
+
+    const newRestaurant = await Restaurant.create({
+      restaurantName,
+      rating,
+      price,
+      description,
+      image: uploaded.secure_url,
+      location: {
+        latitude,
+        longitude
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Restaurant created",
+      data: newRestaurant
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message
+    });
+  }
+};
+
+exports.getAllRestaurants = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find();
+    res.status(200).json({
+      success: true,
+      data: restaurants
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message
+    });
   }
 };
