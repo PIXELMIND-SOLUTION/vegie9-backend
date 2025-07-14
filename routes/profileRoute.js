@@ -1,9 +1,40 @@
 const express = require('express');
 const router = express.Router();
 const {upsertAboutUs,getAboutUs} = require('../controllers/aboutUsController');
-const {createProduct,getAllProducts,updateProduct,deleteProduct,createOrder,getOrderHistory,updateOrderStatus,deleteOrder,searchProducts} = require('../controllers/orderControler');
 const {createNotification,getAllNotifications,markAsRead,deleteNotification} = require('../controllers/notificationController');
+const { submitHelpUs, getAllHelpUs } = require('../controllers/helpUsControler');
+const controller = require("../controllers/orderControler");
+const upload = require("../utils/multer");
 
+// ---------- PRODUCT ROUTES ----------
+router.post("/product", upload.single("image"), controller.createProduct);
+router.get("/products", controller.getAllProducts);
+router.get("/product/:productId", controller.getProductById);
+router.get("/products/search", controller.searchProducts);
+router.put("/product/:productId", controller.updateProduct);
+router.delete("/product/:productId", controller.deleteProduct);
+router.get('/category/:category', controller.getProductByCategory);
+// Toggle wishlist (add/remove)
+router.post("/wishlist/:userId",controller.addToWishlist);
+
+// Get all wishlist items
+router.get("/wishlist/:userId", controller.getWishlist);
+
+// Remove a specific item
+router.delete("/wishlist/:userId/:productId", controller.removeFromWishlist);
+
+
+
+// ---------- ORDER ROUTES ----------
+router.post("/order", controller.createOrder);
+router.get("/orders", controller.getAllOrders);
+router.get("/order/:orderId", controller.getOrderById);
+router.put("/order/:orderId", controller.updateOrder);
+router.delete("/order/:orderId", controller.deleteOrder);
+
+// Extra Order Features
+router.patch("/order/:orderId/accept", controller.vendorAcceptOrder);
+router.patch("/order/:orderId/assign-delivery", controller.assignDeliveryAndTrack);
 
 
 
@@ -13,24 +44,12 @@ router.post('/about-us', upsertAboutUs);
 router.get('/about-us', getAboutUs); 
   
 
-//
-// ✅ Product Routes
-//
-router.post('/products', createProduct);             // Create Product
-router.get('/products', getAllProducts);             // Get All Products
-router.put('/products/:productId', updateProduct);   // Update Product
-router.delete('/products/:productId', deleteProduct);// Delete Product
 
-//
-// ✅ Order Routes
-//
-router.post('/orders', createOrder);                  // Create Order
-router.get('/orders/:userId', getOrderHistory);       // Get Orders by User ID
-router.put('/orders/:orderId', updateOrderStatus);         // ✏️ Update order status
-router.delete('/orders/:orderId', deleteOrder);            // 🗑️ Delete order
 
-//search route
-router.get('/search', searchProducts); // Example: /search?name=apple&category=Fruits
+router.post('/help', submitHelpUs);
+router.get('/help', getAllHelpUs); // Optional: only if admin needs to see the list
+
+
 
  //notification route
 router.post('/notification', createNotification);

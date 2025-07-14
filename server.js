@@ -5,7 +5,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes=require('./routes/authroutes');
 const profileRoutes = require('./routes/profileRoute');
-
+const routes = require("./routes/foodSystemRoute");
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
@@ -30,6 +30,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.use('/api',profileRoutes);
 app.use('/api',authRoutes);
+app.use('/api',routes);
 
 
 // Socket.IO connection

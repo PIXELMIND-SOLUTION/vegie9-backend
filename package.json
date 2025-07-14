@@ -13,18 +13,22 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.0.1",
+    "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "match": "^1.2.11",
     "mongoose": "^8.16.1",
     "multer": "^2.0.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "node": "^22.17.0",
     "nodemon": "^3.1.10",
+    "sequelize": "^6.37.7",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
+    "sqlite3": "^5.1.7",
     "uuid": "^11.1.0"
   }
 }
