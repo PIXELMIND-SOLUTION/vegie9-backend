@@ -28,7 +28,16 @@ const authSchema = new mongoose.Schema({
     }
   ]
 }, {
-  timestamps: true // ✅ CORRECT placement
+  timestamps: true
 });
+
+// ✅ Fix: Use authSchema not userSchema
+authSchema.virtual('confirmPassword')
+  .get(function () {
+    return this._confirmPassword;
+  })
+  .set(function (value) {
+    this._confirmPassword = value;
+  });
 
 module.exports = mongoose.model('User', authSchema);
