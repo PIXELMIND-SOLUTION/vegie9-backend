@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const authSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
+const userSchema = new mongoose.Schema({
+ firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: String, required: true, unique: true },
@@ -19,25 +19,32 @@ const authSchema = new mongoose.Schema({
     postalCode: { type: String },
     country: { type: String }
   },
-  latitude: { type: Number },
-  longitude: { type: Number },
-  myWishlist: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product'
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point"
+    },
+    coordinates: {
+      type: [Number],
+      default: [0, 0],
     }
-  ]
-}, {
-  timestamps: true
+  },
+  myWishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }]
+}, { 
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-// ✅ Fix: Use authSchema not userSchema
-authSchema.virtual('confirmPassword')
-  .get(function () {
-    return this._confirmPassword;
-  })
-  .set(function (value) {
-    this._confirmPassword = value;
-  });
 
-module.exports = mongoose.model('User', authSchema);
+
+
+
+// Geospatial index
+userSchema.index({ location: '2dsphere' });
+
+module.exports = mongoose.model('User', userSchema);
