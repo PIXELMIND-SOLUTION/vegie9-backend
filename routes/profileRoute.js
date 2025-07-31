@@ -11,14 +11,9 @@ const upload = require('../utils/multer');
 router.post('/product', upload.single('image'), controller.createProduct);
 router.get('/products', controller.getAllProducts);
 router.get('/product/:id', controller.getProductById);
-router.put('/product/:id', upload.single('image'), controller.updateProduct);
-router.delete('/product/:id', controller.deleteProduct);
+router.put('/product/:id', upload.single('image'), controller.updateProductById);
+router.delete('/product/:id', controller.deleteProductById);
 
-// Get products by category (contentname)
-router.get('/products/category/:category', controller.getProductsByCategory);
-
-// Search products
-router.get('/products/search/query', controller.searchProducts);
 
 // Wishlist
 router.post('/wishlist/toggle/:userId', controller.addToWishlist);
